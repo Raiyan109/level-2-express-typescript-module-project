@@ -111,6 +111,10 @@ const studentSchema = new Schema<TStudent, StudentModel>({
         required: true
     },
     profileImg: { type: String },
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
     isActive: {
         type: String,
         enum: ['active', 'blocked']
@@ -144,6 +148,11 @@ studentSchema.pre('save', async function (next) {
     next();
 });
 
+//Query middleware
+studentSchema.pre('find', function (next) {
+    this.find({ isDeleted: { $ne: true } });
+    next();
+});
 
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
