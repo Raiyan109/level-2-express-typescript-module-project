@@ -13,7 +13,7 @@ app.use(cors());
 // application routes
 // app.use('/api/v1/students', StudentRoutes);
 // app.use('/api/v1/users', UserRoutes);
-// application routes
+
 app.use('/api/v1', router);
 
 const getAController = (req: Request, res: Response) => {
