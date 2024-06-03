@@ -119,7 +119,13 @@ const studentSchema = new Schema<TStudent, StudentModel>({
         type: String,
         enum: ['active', 'blocked']
     },
-});
+},// write this code in the second param on studentSchema
+    {
+        toJSON: {
+            virtuals: true,
+        },
+    },
+);
 
 //creating a custom instance method
 // studentSchema.methods.isUserExists = async function (id: string) {
@@ -153,6 +159,12 @@ studentSchema.pre('find', function (next) {
     this.find({ isDeleted: { $ne: true } });
     next();
 });
+
+// virtual
+studentSchema.virtual('fullName').get(function () {
+    return this.name.firstName + this.name.middleName + this.name.lastName;
+});
+
 
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
