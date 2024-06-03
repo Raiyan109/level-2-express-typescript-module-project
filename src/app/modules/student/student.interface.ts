@@ -1,6 +1,6 @@
 // student.interface.ts
 
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 
 export type TUserName = {
     firstName: string;
@@ -26,8 +26,8 @@ export type TLocalGuardian = {
 
 export type TStudent = {
     id: string;
+    user: Types.ObjectId;
     name: TUserName;
-    password: string;
     gender: 'male' | 'female' | 'other';
     dateOfBirth?: string;
     email: string;
@@ -39,9 +39,15 @@ export type TStudent = {
     guardian: TGuardian;
     localGuardian: TLocalGuardian;
     profileImg?: string;
-    isActive: 'active' | 'blocked';
+
     isDeleted: boolean
 };
+
+export type NewUser = {
+    password: string;
+    role: string;
+    id: string;
+}
 
 // for creating instance
 // export type TStudentMethods = {

@@ -74,14 +74,15 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>({
     id: { type: String, required: true, unique: true },
+    user: {
+        type: Schema.Types.ObjectId,
+        required: [true, 'User id is required'],
+        unique: true,
+        ref: 'User',
+    },
     name: {
         type: userNameSchema,
         required: true
-    },
-    password: {
-        type: String,
-        required: [true, 'Password is required'],
-        maxLength: [20, 'Password can not be more than 20 characters'],
     },
     gender: {
         type: String,
@@ -115,10 +116,7 @@ const studentSchema = new Schema<TStudent, StudentModel>({
         type: Boolean,
         default: false,
     },
-    isActive: {
-        type: String,
-        enum: ['active', 'blocked']
-    },
+
 },// write this code in the second param on studentSchema
     {
         toJSON: {
@@ -141,18 +139,7 @@ studentSchema.statics.isUserExists = async function (id: string) {
     return existingUser;
 };
 
-// pre save middleware/ hook : will work on create()  save()
 
-studentSchema.pre('save', async function (next) {
-    // console.log(this, 'pre hook : we will save  data');
-    const user = this; // doc
-    // hashing password and save into DB
-    user.password = await bcrypt.hash(
-        user.password,
-        Number(config.bcrypt_salt_rounds),
-    );
-    next();
-});
 
 //Query middleware
 studentSchema.pre('find', function (next) {
